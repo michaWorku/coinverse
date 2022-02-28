@@ -42,98 +42,76 @@ const News: React.FC<NewsProps> = ({
   }
 
   return (
-    <Row
-      gutter={[24, 24]}
-    >
+    <Row gutter={[24, 24]}>
+      {!simplified && (
+        <Col span={24}>
+          <Select
+            showSearch
+            className="select-news"
+            placeholder="Select a Crypto"
+            options={coins.map((coin) => ({
+              value: coin.name,
+              label: coin.name,
+              key: coin.uuid.toString(),
+            }))}
+            onChange={(value: string) => setNewsCategory(value)}
+            filterOption={(input, option) => {
+              const val = option && option.value as string | undefined;
+              return val?.toLowerCase().includes(input.toLowerCase()) || false;
+            }}
+            loading={loadingCryptoCurrencies}
+          />
+        </Col>
+      )}
 
-      {
-        !simplified && (
-          <Col
-            span={24}
-          >
-            <Select
-              showSearch
-              className="select-news"
-              placeholder="Select a Crypto"
-              options={
-                coins.map((coin) => ({
-                  value: coin.name,
-                  label: coin.name,
-                  key: coin.uuid.toString(),
-                }))
-              }
-              onChange={(value: string) => setNewsCategory(value)}
-              filterOption={(input, option) => {
-                const val = option?.value as (string | undefined);
-                return val?.toLowerCase().includes(input.toLowerCase()) || false;
-              }}
-              loading={loadingCryptoCurrencies}
-            />
-          </Col>
-        )
-      }
+      {cryptoNews.value.map((news) => (
+        <Col
+          xs={24}
+          sm={12}
+          lg={8}
+          key={news.url}
+          className="news-card-container"
+        >
+          <Card hoverable className="news-card">
+            <a href={news.url} target="_blank" rel="noreferrer">
+              <div className="news-image-container">
+                <Title className="news-title" level={4}>
+                  {news.name}
+                </Title>
 
-      {
-        cryptoNews.value.map((news, index) => (
-          <Col
-            xs={24}
-            sm={12}
-            lg={8}
-            key={index.toString()}
-            className="news-card-container"
-          >
-            <Card
-              hoverable
-              className="news-card"
-            >
-              <a href={news.url} target="_blank" rel="noreferrer">
-                <div className="news-image-container">
-                  <Title
-                    className="news-title"
-                    level={4}
-                  >
-                    { news.name }
-                  </Title>
+                <img
+                  style={{
+                    maxWidth: '200px',
+                    maxHeight: '200px',
+                  }}
+                  src={news?.image?.thumbnail?.contentUrl || DEMO_IMAGE}
+                  alt={news.name}
+                />
+              </div>
 
-                  <img
-                    style={{
-                      maxWidth: '200px',
-                      maxHeight: '200px',
-                    }}
-                    src={news?.image?.thumbnail?.contentUrl || DEMO_IMAGE}
-                    alt={news.name}
+              <p>
+                {news.description?.length > 100
+                  ? `${news.description.substring(0, 100)}...`
+                  : news.description}
+              </p>
+
+              <div className="provider-container">
+                <div>
+                  <Avatar
+                    src={news.provider[0]?.image?.thumbnail?.contentUrl}
                   />
-                </div>
 
-                <p>
-                  {
-                    news.description?.length > 100
-                      ? `${news.description.substring(0, 100)}...`
-                      : news.description
-                  }
-                </p>
-
-                <div className="provider-container">
-                  <div>
-                    <Avatar
-                      src={news.provider[0]?.image?.thumbnail?.contentUrl}
-                    />
-
-                    <Text className="provider-name">
-                      { news.provider[0]?.name }
-                    </Text>
-                  </div>
-
-                  <Text>
-                    { moment(news.datePublished).startOf('s').fromNow() }
+                  <Text className="provider-name">
+                    {news.provider[0]?.name}
                   </Text>
                 </div>
-              </a>
-            </Card>
-          </Col>
-        ))
-      }
 
+                <Text>{moment(news.datePublished).startOf('s').fromNow()}</Text>
+              </div>
+            </a>
+          </Card>
+        </Col>
+      ))}
     </Row>
   );
 };
