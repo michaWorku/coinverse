@@ -1,9 +1,9 @@
 import React from 'react';
-import { Route, Switch } from 'react-router-dom';
-import { Layout } from 'antd';
+import { Link, Route, Switch } from 'react-router-dom';
+import { Layout, Typography, Space } from 'antd';
 
 import './App.css';
-import { Navbar, Footer } from './components';
+import { Navbar } from './components';
 
 import {
   Exchanges,
@@ -23,44 +23,49 @@ const App: React.FC = () => (
       <Layout>
         <div className="routes">
           <Switch>
-            <Route
-              exact
-              path="/"
-            >
+            <Route exact path="/">
               <Homepage />
             </Route>
 
-            <Route
-              exact
-              path="/exchanges"
-            >
+            <Route exact path="/exchanges">
               <Exchanges />
             </Route>
 
-            <Route
-              exact
-              path="/cryptocurrencies"
-            >
+            <Route exact path="/cryptocurrencies">
               <Cryptocurrencies />
             </Route>
 
-            <Route
-              exact
-              path="/crypto/:coinId"
-            >
+            <Route exact path="/crypto/:coinId">
               <CryptoDetails />
             </Route>
 
-            <Route
-              exact
-              path="/news"
-            >
+            <Route exact path="/news">
               <News />
             </Route>
           </Switch>
         </div>
       </Layout>
-      <Footer />
+
+      <div className="footer">
+        <Typography.Title
+          level={5}
+          style={{
+            color: 'white',
+            textAlign: 'center',
+          }}
+        >
+          Coinverse
+          <br />
+          All right reserverd.
+        </Typography.Title>
+
+        <Space>
+          <Link to="/">Home</Link>
+          <Link to="/exchanges">Exchanges</Link>
+          <Link to="/news">News</Link>
+        </Space>
+      </div>
+
     </div>
   </div>
 );
